@@ -1,0 +1,100 @@
+#!/bin/sh
+# -*- mode: sh -*-
+
+
+MYENV_DIR="${MYENV_DIR:-$HOME/etc/myenv}"
+
+MYENV_LIST_SEP="${MYENV_DISP_SEP:-|}"
+MYENV_LIST_FORMAT="%s"
+
+
+### lib
+__myenv_dir()
+{
+    mkdir -p "$MYENV_DIR" &&
+        chmod 0700 "$MYENV_DIR"
+}
+
+
+### help
+__myenv_help()
+{
+    cat <<EOF
+Usage:
+    myenv [action] [...]
+
+with action in:
+    h | help           : display help
+    l | list           : list available env
+    s | set | load     : load env
+    u | unset | unload : unload env
+    c | create         : create env
+EOF
+}
+
+
+### list
+__myenv_list()
+{
+    __myenv_dir || return 1
+
+}
+
+
+### load
+__myenv_load()
+{
+    :
+}
+
+
+### unload
+__myenv_unload()
+{
+    :
+}
+
+
+### create
+__myenv_create()
+{
+    :
+}
+
+
+### myenv
+__myenv()
+{
+    __myenv=
+    case "$1" in
+        h|help)
+            __myenv_help
+            ;;
+        ""|l|list)
+            __myenv_list
+            ;;
+        s|"set"|load)
+            shift
+            __myenv_load "$@"
+            ;;
+        u|"unset"|unload)
+            shift
+            __myenv_unload "$@"
+            ;;
+        c|create)
+            shift
+            __myenv_create "$@"
+            ;;
+        *)
+            __myenv_load "$@"
+            ;;
+    esac
+}
+
+myenv()
+{
+    __myenv "$@"
+    myenv="$?"
+    [ -n "$__myenv" ] && printf "%s\n" "$__myenv"
+    return $myenv
+}
