@@ -176,7 +176,7 @@ __myenv()
 {
     __myenv=
     case "$1" in
-        h|help)
+        -h|--help|h|help)
             __myenv_help
             ;;
         ""|l|list)
