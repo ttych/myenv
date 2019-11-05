@@ -155,6 +155,9 @@ $__myenv_create__v='$__myenv_create__v_value'"
 unset $__myenv_create__v"
     done
 
+    __myenv_create__load_content="${__myenv_create__load_content:-:}"
+    __myenv_create__unload_content="${__myenv_create__unload_content:-:}"
+
     cat <<EOF > "$MYENV_DIR/$__myenv_create__name"
 # -*- mode: sh -*-
 
