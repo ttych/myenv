@@ -136,6 +136,14 @@ __myenv_unload()
 }
 
 
+### reload
+__myenv_reload()
+{
+    __myenv_unload "$@" &&
+        __myenv_reload "$@"
+}
+
+
 ### create
 __myenv_create()
 {
@@ -192,6 +200,10 @@ __myenv()
         u|"unset"|unload)
             shift
             __myenv_unload "$@"
+            ;;
+        r|reset|reload)
+            shift
+            __myenv_reload "$@"
             ;;
         c|create)
             shift
