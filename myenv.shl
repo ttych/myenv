@@ -86,7 +86,7 @@ __myenv_load()
 
     __myenv_load__pwd="$PWD"
     cd "$MYENV_DIR" &&
-        . "$1" &&
+        . ./"$1" &&
         $MYENV_LOAD_FUNCTION &&
         __myenv_load_clean &&
         MYENV_LOADED="${MYENV_LOADED}${1}:"
@@ -126,7 +126,7 @@ __myenv_unload()
 
     __myenv_unload__pwd="$PWD"
     cd "$MYENV_DIR" &&
-        . "$1" &&
+        . ./"$1" &&
         $MYENV_UNLOAD_FUNCTION && {
             __myenv_unload__pre="${MYENV_LOADED%:$1*}"
             __myenv_unload__post="${MYENV_LOADED#*$1:}"
