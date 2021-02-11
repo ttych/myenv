@@ -33,7 +33,9 @@ with action in:
     l | list           : list available env
     s | set | load     : load env
     u | unset | unload : unload env
+    r | reload         : reload env
     c | create         : create env
+
 EOF
 }
 
@@ -65,12 +67,12 @@ __myenv_list_print_line()
 __myenv_list_env()
 (
     __myenv_list_env__name="$1"
-    case "$MYENV_LOADED" in
-        *":$__myenv_list_env__name:"*)
-            __myenv_list_env__set=x ;;
-        *)
-            __myenv_list_env__set= ;;
-    esac
+
+    if __myenv_loaded "$__myenv_list_env__name"; then
+        __myenv_list_env__set=x
+    else
+        __myenv_list_env__set=
+    fi
 
     __myenv_list_print_line "$__myenv_list_env__name" \
                             "$__myenv_list_env__set"
@@ -80,6 +82,8 @@ __myenv_list_env()
 ### load
 __myenv_load()
 {
+    __myenv_loaded "$1" && return 1
+
     [ -f "$MYENV_DIR/$1" ] && [ -r "$MYENV_DIR/$1" ] || return 1
 
     __myenv_load_clean
@@ -90,7 +94,6 @@ __myenv_load()
         $MYENV_LOAD_FUNCTION &&
         __myenv_load_clean &&
         MYENV_LOADED="${MYENV_LOADED}${1}:"
-    # FIXME if already loaded do not append
     cd "$__myenv_load__pwd"
 }
 
@@ -98,7 +101,7 @@ __myenv_loaded()
 {
     [ -z "$1" ] && return 1
 
-    case "$MYENV_DIR" in
+    case "$MYENV_LOADED" in
         *":$1:"*) return 0 ;;
         *) return 1 ;;
     esac
@@ -115,12 +118,7 @@ __myenv_load_clean()
 ### unload
 __myenv_unload()
 {
-    case "$MYENV_LOADED" in
-        *":$1:"*)
-            ;;
-        *) return 0
-           ;;
-    esac
+    __myenv_loaded "$1" || return 1
 
     __myenv_load_clean
 
